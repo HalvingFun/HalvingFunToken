@@ -11,7 +11,7 @@ This token introduces a unique dynamic to the digital asset's value and supply, 
 - **Ownership Controls**: Utilizing OpenZeppelin's Ownable contract, providing secure management functionalities. After completing all necessary settings and configurations, ownership will be renounced to ensure decentralized governance.
 
 ## Contract on BaseScan
-View the Halving Fun token contract on BaseScan: (https://basescan.org/address/0xeeaa1Ae7fBE9Be377f3Ec90200871BDeCdA1D66c#code)[https://basescan.org/address/0xeeaa1Ae7fBE9Be377f3Ec90200871BDeCdA1D66c#code]
+View the Halving Fun token contract on BaseScan: https://basescan.org/address/0xeeaa1Ae7fBE9Be377f3Ec90200871BDeCdA1D66c#code
 
 ## Functions
 ### Public Functions
