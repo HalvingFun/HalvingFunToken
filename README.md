@@ -1,27 +1,38 @@
-# Halving Fun (HALVIFU) Token Contract
+# HalvingFun ERC20 Token
 
 ## Overview
-"**Halving Fun**" (Ticker: **HALVIFU**) is an ERC20 token designed to adjust the balance of specific addresses after a predetermined timestamp, simulating the effect of a halving event. Initially minted with a supply of 100 billion tokens, it utilizes OpenZeppelin's ERC20 and Ownable contracts for standard token functionality and ownership management.
-
-This token introduces a unique dynamic to the digital asset's value and supply, reminiscent of cryptocurrency halving mechanisms that traditionally impact mining rewards.
+HalvingFun is an innovative ERC20 token that integrates voting capabilities with a unique reward mechanism based on the concept of "halving." This project aims to engage the community by rewarding token holders and encouraging active participation in governance.
 
 ## Features
-- **Initial Supply**: 100 billion HALVIFU tokens, minted upon contract deployment to the deployer's address.
-- **Halving Mechanism**: Post a specific timestamp, the `balanceOf` function conditionally halves the balance for addresses marked as LP (Liquidity Provider) addresses, simulating a token "halving" event.
-- **Ownership Controls**: Utilizing OpenZeppelin's Ownable contract, providing secure management functionalities. After completing all necessary settings and configurations, ownership will be renounced to ensure decentralized governance.
+- **ERC20 Compatibility**: Fully compatible with the Ethereum ERC20 standard, ensuring interoperability with a wide range of wallets and exchanges.
+- **Reward Mechanism**: Introduces a halving event concept where token rewards are distributed based on holders' balances at specific block numbers, promoting long-term holding and engagement.
 
-## Contract on BaseScan
-View the Halving Fun token contract on BaseScan: https://basescan.org/address/0xeeaa1Ae7fBE9Be377f3Ec90200871BDeCdA1D66c#code
+## Contract Address
+[HalvingFun Token on BaseScan](https://basescan.org/address/0x7aBa5a5506E32808B4672F1331b2Cd308E61e763)
 
-## Functions
-### Public Functions
-- `balanceOf(address account)`: Returns the balance of `account`. If the account is an LP address and the current timestamp is past the halving timestamp, this balance is halved.
-- `setHalvingTimestamp(uint256 _halvingTimestamp)`: Sets the halving event's timestamp. Only callable by the contract owner.
-- `addLPAddress(address _LPaddress)`: Marks an address as an LP address. Only callable by the contract owner.
-- `removeLPAddress(address _LPaddress)`: Unmarks an LP address. Only callable by the contract owner.
+## Getting Started
+To interact with the HalvingFun token, you will need a wallet that supports ERC20 tokens. The token address is: 0x7aBa5a5506E32808B4672F1331b2Cd308E61e763
+
+## How to Claim Rewards
+1. **Check Your Eligibility**: Visit [BaseScan](https://basescan.org/address/0x7aBa5a5506E32808B4672F1331b2Cd308E61e763) to see if you are eligible for the halving reward based on your token balance at the halving block number.
+2. **Claim Your Reward**: Use your preferred wallet or interaction tool to call the `claimMyReward` function on the contract.
+
+## Checking Your Halving-Based Reward
+
+If you're holding HalvingFun tokens, you might be curious about the rewards you can receive during our unique halving events. Don't worry, checking your potential reward is straightforward, even if you're not familiar with coding or smart contracts. To see how many tokens you could receive as a reward, simply visit our project's page on [BaseScan](https://basescan.org/address/0x7aBa5a5506E32808B4672F1331b2Cd308E61e763). Here, you'll find a user-friendly interface that shows your current token balance and any rewards you're eligible for based on the upcoming halving event. Remember, these rewards are calculated based on your token holdings at a specific block number, encouraging long-term participation and investment in our community. Keep an eye on the BaseScan page for updates and instructions on how to claim your rewards when the time comes. We're excited to see our community grow and thrive through active participation and governance!
+
+## Contributing
+We welcome contributions from the community. Please refer to our contribution guidelines for more information on how to participate.
 
 ## Security
-This contract inherits security features from OpenZeppelin contracts. However, ensure thorough testing and consider a security audit before production deployment. The decision to renounce ownership after initial configurations further strengthens the contract's trustworthiness by ensuring decentralized control.
+Security is a top priority. We continually test and audit the codebase. If you discover a security issue, please bring it to our attention right away!
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+- **Project Link**: https://github.com/HalvingFun/HalvingFunToken (adjust as necessary)
+- **Website**: https://wearehalving.fun/
+
+## Acknowledgments
+- [OpenZeppelin](https://openzeppelin.com/contracts) for their secure and community-audited smart contracts.
