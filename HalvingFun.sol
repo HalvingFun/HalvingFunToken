@@ -70,7 +70,7 @@ contract HalvingFun is ERC20, ERC20Votes, Ownable, ReentrancyGuard {
             return 0;
         }
         uint256 accountBalanceAtSnapshot = getPastVotes(account, snapshotBlock);
-        // Simple reward formula; adjust as needed
+        
         return accountBalanceAtSnapshot;
     }
 
