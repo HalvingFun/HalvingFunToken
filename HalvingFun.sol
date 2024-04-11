@@ -1,96 +1,77 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.4.0/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.4.0/contracts/access/Ownable.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.4.0/contracts/security/ReentrancyGuard.sol";
 
 /// @title HalvingFun ERC20 Token
 /// @dev Extends ERC20 Token Standard with Voting Capabilities and includes a mechanism for halving rewards based on past votes.
-contract HalvingFun is
-    ERC20,
-    ERC20Votes,
-    Ownable,
-    ReentrancyGuard
-{
-    /// Block number at which the next halving event is scheduled.
+contract HalvingFun is ERC20, ERC20Votes, Ownable, ReentrancyGuard {
     uint256 public halvingBlockNumber;
-
-    /// Mapping to track whether an address has already claimed its halving reward.
+    uint256 public snapshotBlock;
     mapping(address => bool) public hasReceivedHalvingReward;
+    uint256 constant initialSupply = 1e11 * 1e18; // 100 billion tokens with 18 decimal places
 
-    /// Initial supply of tokens, set to 100 billion tokens (with 18 decimal places).
-    uint256 constant initialSupply = 1e11 * 1e18;
+    event SnapshotBlockSet(uint256 snapshotBlock);
 
-    /// Constructs the ERC20 token with a name, symbol, mints the initial supply to the deployer, and initializes the halving block number.
     constructor() ERC20("Halving Fun", "$HALVIFU") ERC20Permit("Halving Fun") {
         _mint(msg.sender, initialSupply);
         halvingBlockNumber = 13396614;
     }
 
-    /// @notice Allows users to claim their halving reward based on their balance at the halving event.
+    function setRandomSnapshotBlock() public {
+        require(snapshotBlock == 0, "Can only be setted once");
+
+        uint256 startBlock = halvingBlockNumber - 172800;
+
+        require(
+            block.number > halvingBlockNumber,
+            "Can only set snapshot before the start range."
+        );
+
+        uint256 seed = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.timestamp,
+                    block.difficulty,
+                    block.coinbase
+                )
+            )
+        );
+        uint256 range = halvingBlockNumber - startBlock;
+        uint256 randomOffset = seed % range;
+        snapshotBlock = startBlock + randomOffset;
+
+        emit SnapshotBlockSet(snapshotBlock);
+    }
+
     function claimMyReward() public nonReentrant {
+        require(
+            block.number > halvingBlockNumber,
+            "Halving has not yet occurred."
+        );
         require(
             !hasReceivedHalvingReward[msg.sender],
             "Reward already claimed"
         );
-        address[] memory accounts = new address[](1);
-        accounts[0] = msg.sender;
-        _mintHalvingReward(accounts);
+        require(snapshotBlock != 0, "Snapshot block not set.");
+
+        // Ensuring that the claim is after the snapshot for the reward calculation.
+        require(block.number > halvingBlockNumber, "Claim period not started.");
+
+        uint256 rewardAmount = calculateReward(msg.sender);
+        hasReceivedHalvingReward[msg.sender] = true;
+        _mint(msg.sender, rewardAmount);
     }
 
-    /// @notice Allows the owner to mint rewards for a list of addresses based on their balances at the halving event.
-    /// @param accounts Array of addresses to mint rewards for.
-    function spreadRewardsForAddresses(
-        address[] memory accounts
-    ) public onlyOwner nonReentrant {
-        _mintHalvingReward(accounts);
-    }
-
-    /// @notice Sets a new block number for the halving event.
-    /// @dev Can only be called by the contract owner, and the block number must be in the future.
-    /// @param _halvingBlockNumber The future block number for the next halving event.
-    function setHalvingBlockNumber(
-        uint256 _halvingBlockNumber
-    ) public onlyOwner {
-        require(
-            _halvingBlockNumber > block.number,
-            "Halving block number must be in the future."
-        );
-        halvingBlockNumber = _halvingBlockNumber;
-    }
-
-    /// @notice Calculates the potential reward for a given account based on its balance at the halving event.
-    /// @dev Returns 0 if the reward has already been claimed for the account.
-    /// @param account The address of the account to calculate the reward for.
-    /// @return The calculated reward amount based on the account's past votes at the halving block number, or 0 if already claimed.
     function calculateReward(address account) public view returns (uint256) {
-        if (
-            block.number < halvingBlockNumber ||
-            hasReceivedHalvingReward[account]
-        ) {
+        if (hasReceivedHalvingReward[account] || snapshotBlock == 0) {
             return 0;
         }
-        uint256 accountBalanceAtHalving = getPastVotes(
-            account,
-            halvingBlockNumber
-        );
-        return accountBalanceAtHalving; // Return the account balance at halving as the reward amount.
-    }
-
-    // Private function to mint halving rewards for a list of accounts based on the halving block number.
-    function _mintHalvingReward(address[] memory accounts) private {
-        for (uint256 i = 0; i < accounts.length; i++) {
-            if (!hasReceivedHalvingReward[accounts[i]]) {
-                uint256 accountBalanceAtHalving = getPastVotes(
-                    accounts[i],
-                    halvingBlockNumber
-                );
-                hasReceivedHalvingReward[accounts[i]] = true;
-                _mint(accounts[i], accountBalanceAtHalving);
-            }
-        }
+        uint256 accountBalanceAtSnapshot = getPastVotes(account, snapshotBlock);
+        // Simple reward formula; adjust as needed
+        return accountBalanceAtSnapshot;
     }
 
     // Overrides required by Solidity for ERC20 and ERC20Votes integration.
@@ -102,19 +83,19 @@ contract HalvingFun is
         super._afterTokenTransfer(from, to, amount);
     }
 
-    function _mint(
-        address to,
-        uint256 amount
-    ) internal override(ERC20, ERC20Votes) {
+    function _mint(address to, uint256 amount)
+        internal
+        override(ERC20, ERC20Votes)
+    {
         if (balanceOf(to) == 0 && delegates(to) == address(0))
             _delegate(to, to);
         super._mint(to, amount);
     }
 
-    function _burn(
-        address account,
-        uint256 amount
-    ) internal override(ERC20, ERC20Votes) {
+    function _burn(address account, uint256 amount)
+        internal
+        override(ERC20, ERC20Votes)
+    {
         super._burn(account, amount);
     }
 }
