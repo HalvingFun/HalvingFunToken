@@ -3,6 +3,8 @@
 ## Overview
 HalvingFun is an innovative ERC20 token that integrates voting capabilities with a unique reward mechanism based on the concept of "halving." This project aims to engage the community by rewarding token holders and encouraging active participation in governance.
 
+Additional info: https://telegra.ph/HalviFu-Were-Gonna-Halving-Fun-for-Bitcoin-Halving-2024-04-10
+
 ## Features
 - **ERC20 Compatibility**: Fully compatible with the Ethereum ERC20 standard, ensuring interoperability with a wide range of wallets and exchanges.
 - **Reward Mechanism**: Introduces a halving event concept where token rewards are distributed based on holders' balances at specific block numbers, promoting long-term holding and engagement.
