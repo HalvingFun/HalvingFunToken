@@ -33,6 +33,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact
 - **Project Link**: https://github.com/HalvingFun/HalvingFunToken (adjust as necessary)
 - **Website**: https://wearehalving.fun/
+- **Twitter**: https://twitter.com/wearehalvingfun
+- **TG**: https://t.me/halvingfun
 
 ## Acknowledgments
 - [OpenZeppelin](https://openzeppelin.com/contracts) for their secure and community-audited smart contracts.
