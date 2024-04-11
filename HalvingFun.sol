@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.4.0/contracts/token/ERC20/extensions/ERC20Votes.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.4.0/contracts/access/Ownable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.4.0/contracts/security/ReentrancyGuard.sol";
 
 /// @title HalvingFun ERC20 Token
 /// @dev Extends ERC20 Token Standard with Voting Capabilities and includes a mechanism for halving rewards based on past votes.
-contract HalvingFun is ERC20, ERC20Votes, Ownable, ReentrancyGuard {
+contract HalvingFun is
+    ERC20,
+    ERC20Votes,
+    Ownable,
+    ReentrancyGuard
+{
     /// Block number at which the next halving event is scheduled.
     uint256 public halvingBlockNumber;
 
